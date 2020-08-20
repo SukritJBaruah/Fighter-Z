@@ -6,7 +6,10 @@ public class IWalkState : IEnemyStates
 {
     private Enemy1 enemy;
     private float walkTimer;
-    private float walkDuration = 7;
+    private float walkDuration = 7f;
+
+    private float locatorTimer;
+    private float locateAfter = 0.7f;
 
     public void Enter(Enemy1 enemy1)
     {
@@ -18,7 +21,12 @@ public class IWalkState : IEnemyStates
         Debug.Log("walking");
         Walk();
 
-        enemy.LocatePlayer();
+        locatorTimer += Time.deltaTime;
+        if (locatorTimer>locateAfter)
+        {
+            enemy.LocatePlayer();
+            locatorTimer = 0;
+        }
         enemy.Move();
     }
 

@@ -99,7 +99,7 @@ public class Enemy1 : MonoBehaviour
         print("locating");
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         Vector2 loc = player.transform.position;
-        if (loc.x - this.transform.position.x >= 0)
+        if (loc.x - this.transform.position.x > 0)
         {
             if(!facingright)
             {
@@ -114,7 +114,7 @@ public class Enemy1 : MonoBehaviour
             }
         }
 
-        if (loc.y - this.transform.position.y >= 0)
+        if (loc.y - this.transform.position.y > 0)
         {
             playerup = true;
         }
