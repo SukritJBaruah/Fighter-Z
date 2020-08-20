@@ -9,7 +9,7 @@ public class IIdealState : IEnemyStates
 
     private float idealTimer;
 
-    private float idealDuration = 3f;
+    private float idealDuration = 0.5f;
     public void Enter(Enemy1 enemy1)
     {
         this.enemy = enemy1;

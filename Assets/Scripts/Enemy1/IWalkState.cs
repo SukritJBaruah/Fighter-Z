@@ -6,7 +6,7 @@ public class IWalkState : IEnemyStates
 {
     private Enemy1 enemy;
     private float walkTimer;
-    private float walkDuration = 5;
+    private float walkDuration = 7;
 
     public void Enter(Enemy1 enemy1)
     {
@@ -18,6 +18,7 @@ public class IWalkState : IEnemyStates
         Debug.Log("walking");
         Walk();
 
+        enemy.LocatePlayer();
         enemy.Move();
     }
 
@@ -33,7 +34,6 @@ public class IWalkState : IEnemyStates
 
     private void Walk()
     {
-
 
         walkTimer += Time.deltaTime;
 

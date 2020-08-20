@@ -37,8 +37,8 @@ public class Enemy1 : MonoBehaviour
 
 
     // movement support
-    const float MoveUnitsPerSecond = 1;
-    const float verticalmultiplier = 0.7f;
+    const float MoveUnitsPerSecond = 0.8f;
+    const float verticalmultiplier = 0.6f;
     //run variables
     const float RunUnitsPerSecond = 2f;
     bool isRunning = false;
@@ -52,6 +52,7 @@ public class Enemy1 : MonoBehaviour
     protected Animator animator;
     //sprite mirrorer
     private bool facingright;
+    private bool playerup;
 
     private IEnemyStates currentstate;
 
@@ -83,24 +84,60 @@ public class Enemy1 : MonoBehaviour
 
     } // update end
 
-
+    #region Move, LocatePlayer
     //AI Movements
     public void Move()
     {
         animator.SetFloat("Velocity", 1);
 
         transform.Translate(GetDirection() * MoveUnitsPerSecond * Time.deltaTime);
+        transform.Translate(GetUpDown() * MoveUnitsPerSecond * Time.deltaTime * verticalmultiplier);
     }
 
+    public void LocatePlayer()
+    {
+        print("locating");
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        Vector2 loc = player.transform.position;
+        if (loc.x - this.transform.position.x >= 0)
+        {
+            if(!facingright)
+            {
+                Flip();
+            }
+        }
+        else if (loc.x - this.transform.position.x < 0)
+        {
+            if(facingright)
+            {
+                Flip();
+            }
+        }
 
+        if (loc.y - this.transform.position.y >= 0)
+        {
+            playerup = true;
+        }
+        else
+            playerup = false;
+    }
 
+    private Vector2 GetUpDown()
+    {
+        if (playerup == true)
+        {
+            return Vector2.up;
+        }
+        else
+            return Vector2.down;
+    }
 
     public Vector2 GetDirection()
     {
         return facingright ? Vector2.right : Vector2.left;
     }
 
-
+    #endregion
 
 
 
@@ -109,16 +146,11 @@ public class Enemy1 : MonoBehaviour
 
     //sprite mirrorer
     //equates for the direction the player is facing
-    private void Flip(float horizontal)
+    private void Flip()
     {
-        if (horizontal > 0 && !facingright || horizontal < 0 && facingright)
-        {
-            facingright = !facingright;
+        facingright = !facingright;
+        transform.localScale = new Vector3(transform.localScale.x * -1,1,1);
 
-            Vector3 mirrorscale = transform.localScale;
-            mirrorscale.x *= -1;
-            transform.localScale = mirrorscale;
-        }
     }
 
     /// <summary>
