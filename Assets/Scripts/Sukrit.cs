@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
+//run jump attack needs to be fixed
+
 public class Sukrit : MonoBehaviour
 {
     #region initial values
@@ -18,6 +20,8 @@ public class Sukrit : MonoBehaviour
     //roll time
     float rolltime = 0f;
     bool isRolling = false;
+
+    bool isDefending = false; //for jump to not move while defending
 
     //attack values
     bool isRunAttack = false;
@@ -60,7 +64,7 @@ public class Sukrit : MonoBehaviour
         BoxCollider2D collider = GetComponent<BoxCollider2D>();
         colliderHalfWidth = collider.size.x / 2;
         colliderHalfHeight = collider.size.y / 2;
-
+        animator = GetComponent<Animator>();
 
     }
 
@@ -160,14 +164,18 @@ public class Sukrit : MonoBehaviour
             maxJumpHeight = transform.position.y + maxJumpHeight;
         }
 
-        if (Input.GetButtonDown("Jump") && !isjumping)
+        if(!isDefending)
         {
-            groundPos = transform.position;
-            inputJump = true;
-            isjumping = true;
-            animator.SetBool("jumping", true);
-            StartCoroutine("Jump");
+            if (Input.GetButtonDown("Jump") && !isjumping)
+            {
+                groundPos = transform.position;
+                inputJump = true;
+                isjumping = true;
+                animator.SetBool("jumping", true);
+                StartCoroutine("Jump");
+            }
         }
+
 
         #endregion
 
@@ -203,6 +211,7 @@ public class Sukrit : MonoBehaviour
                     //end
                     animator.SetBool("defend", true);
                     canMove = false;
+                    isDefending = true;
                 }
             }
             else
@@ -211,6 +220,7 @@ public class Sukrit : MonoBehaviour
                 if(!animator.GetCurrentAnimatorStateInfo(0).IsName("Player_attack1")) //used for attack variable
                 {
                     canMove = true;
+                    isDefending = false;
                 }
             }
 
