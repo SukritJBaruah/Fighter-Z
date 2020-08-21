@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Events;
-using UnityEngine.EventSystems;
 
 public class Gameplay_pause : MonoBehaviour
 {
