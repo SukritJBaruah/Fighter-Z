@@ -18,7 +18,6 @@ public class IWalkState : IEnemyStates
 
     public void Execute()
     {
-        Debug.Log("walking");
         Walk();
 
         locatorTimer += Time.deltaTime;

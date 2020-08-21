@@ -17,7 +17,6 @@ public class IIdealState : IEnemyStates
 
     public void Execute()
     {
-        Debug.Log("Ideal");
         Ideal();
 
     }
