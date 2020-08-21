@@ -9,6 +9,10 @@ public static class ScreenUtils
 {
 	#region Fields
 
+	static float BGTop = 0.05f;
+
+	static float BGBottom = 0.9f;
+
 	// cached for efficient boundary checking
 	static float screenLeft;
 	static float screenRight;
@@ -75,8 +79,8 @@ public static class ScreenUtils
 			Camera.main.ScreenToWorldPoint(upperRightCornerScreen);
 		screenLeft = lowerLeftCornerWorld.x;
 		screenRight = upperRightCornerWorld.x;
-		screenTop = upperRightCornerWorld.y * 0.3f;
-		screenBottom = lowerLeftCornerWorld.y * 0.9f;
+		screenTop = upperRightCornerWorld.y * BGTop;
+		screenBottom = lowerLeftCornerWorld.y * BGBottom;
 	}
 
 	#endregion
