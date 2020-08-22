@@ -24,6 +24,7 @@ public class Enemy1 : MonoBehaviour
     //attack values
     bool isRunAttack = false;
     float runAttackTime = 0.33f;
+    float meleeRange = 0.5f;
 
     //jump variables
     float maxJumpHeight = 0.8f;
@@ -55,7 +56,6 @@ public class Enemy1 : MonoBehaviour
     private bool playerup;
 
     private IEnemyStates currentstate;
-
     /// <summary>
     /// Use this for initialization
     /// </summary>
@@ -139,6 +139,22 @@ public class Enemy1 : MonoBehaviour
 
     #endregion
 
+
+
+    #region attack1
+    public bool InMeleeRange()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (Vector2.Distance(transform.position, player.transform.position) <= GameObject.FindGameObjectWithTag("DifficultyUtils").GetComponent<DifficultyUtils>().meleeRange 
+            && Math.Abs(transform.position.y - player.transform.position.y) <= GameObject.FindGameObjectWithTag("DifficultyUtils").GetComponent<DifficultyUtils>().meleey)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    #endregion
 
 
 

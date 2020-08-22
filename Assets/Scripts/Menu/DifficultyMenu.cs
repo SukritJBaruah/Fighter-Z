@@ -14,7 +14,6 @@ public class DifficultyMenu : MonoBehaviour
 	void Start()
 	{
 		// add event component and add invoker to event manager
-
 	}
 
 	/// <summary>
@@ -23,7 +22,7 @@ public class DifficultyMenu : MonoBehaviour
 	public void HandleEasyButtonOnClickEvent()
 	{
 		//ADD AI values to low
-
+		GameObject.FindGameObjectWithTag("DifficultyUtils").GetComponent<DifficultyUtils>().setDifficulty(1);
 		//end add here
 		MenuManager.GoToMenu(MenuName.Game);
 	}
@@ -34,7 +33,7 @@ public class DifficultyMenu : MonoBehaviour
 	public void HandleMediumButtonOnClickEvent()
 	{
 		//ADD AI values to medium
-
+		GameObject.FindGameObjectWithTag("DifficultyUtils").GetComponent<DifficultyUtils>().setDifficulty(2);
 		//end add here
 		MenuManager.GoToMenu(MenuName.Game);
 
@@ -46,7 +45,7 @@ public class DifficultyMenu : MonoBehaviour
 	public void HandleHardButtonOnClickEvent()
 	{
 		//ADD AI values to high
-
+		GameObject.FindGameObjectWithTag("DifficultyUtils").GetComponent<DifficultyUtils>().setDifficulty(3);
 		//end add here
 		MenuManager.GoToMenu(MenuName.Game);
 	}

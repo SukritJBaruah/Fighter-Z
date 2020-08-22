@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class IWalkState : IEnemyStates
 {
+    DifficultyUtils difficultyUtils = GameObject.FindGameObjectWithTag("DifficultyUtils").GetComponent<DifficultyUtils>();
     private Enemy1 enemy;
     private float walkTimer;
-    private float walkDuration = 7f;
 
     private float locatorTimer;
-    private float locateAfter = 0.7f;
 
     public void Enter(Enemy1 enemy1)
     {
@@ -21,7 +20,7 @@ public class IWalkState : IEnemyStates
         Walk();
 
         locatorTimer += Time.deltaTime;
-        if (locatorTimer>locateAfter)
+        if (locatorTimer> difficultyUtils.locateAfter)
         {
             enemy.LocatePlayer();
             locatorTimer = 0;
@@ -41,12 +40,18 @@ public class IWalkState : IEnemyStates
 
     private void Walk()
     {
-
+        //goes to ideal after walk duration
         walkTimer += Time.deltaTime;
 
-        if (walkTimer > walkDuration)
+        if (walkTimer > difficultyUtils.walkDuration)
         {
             enemy.ChangeState(new IIdealState());
+        }
+
+        //check for
+        if(enemy.InMeleeRange())
+        {
+            enemy.ChangeState(new IAttackState());
         }
     }
 }
