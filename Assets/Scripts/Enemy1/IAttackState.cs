@@ -55,6 +55,8 @@ public class IAttackState : IEnemyStates
             canattacc = false;
             enemy.Animator.SetBool("Attack1", true);
             animator.SetFloat("Velocity", 0);
+            //move a lil forward, removed if not necessary
+            enemy.transform.Translate(enemy.GetDirection() * Enemy1.MoveUnitsPerSecond * Time.deltaTime * 0.1f);
         }
     }
 }

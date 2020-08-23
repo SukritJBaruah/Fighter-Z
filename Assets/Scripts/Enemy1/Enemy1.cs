@@ -38,7 +38,7 @@ public class Enemy1 : MonoBehaviour
 
 
     // movement support
-    const float MoveUnitsPerSecond = 0.8f;
+    public const float MoveUnitsPerSecond = 0.8f;
     const float verticalmultiplier = 0.6f;
     //run variables
     const float RunUnitsPerSecond = 2f;
@@ -48,6 +48,17 @@ public class Enemy1 : MonoBehaviour
     float rundirection = 0f;
 
     #endregion
+
+    //damage
+    int hitstaken = 0;
+    BoxCollider2D colliderhitbox;
+
+    //enemy1 stats
+    float health = 500;
+    float energy = 500;
+
+    bool isDead = false;
+    float dietimer = 0f;
 
     //animation
     protected Animator animator;
@@ -63,9 +74,9 @@ public class Enemy1 : MonoBehaviour
     {
         facingright = true;
         // save for efficiency
-        BoxCollider2D collider = GetComponent<BoxCollider2D>();
-        colliderHalfWidth = collider.size.x / 2;
-        colliderHalfHeight = collider.size.y / 2;
+        colliderhitbox = GetComponent<BoxCollider2D>();
+        colliderHalfWidth = colliderhitbox.size.x / 2;
+        colliderHalfHeight = colliderhitbox.size.y / 2;
         animator = GetComponent<Animator>();
 
 
@@ -73,12 +84,66 @@ public class Enemy1 : MonoBehaviour
 
     }
 
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.gameObject.CompareTag("player_punch") && hitstaken!=2)
+        {
+            health -= 30f;
+            hitstaken += 1;
+            animator.SetFloat("Damage", 30);
+            print("damage");
+        }
+        else if(other.gameObject.CompareTag("player_punch") && hitstaken == 2)
+        {
+            health -= 30f;
+            hitstaken = 0;
+            animator.SetFloat("Damage", 90);
+            StartCoroutine(collidertoggle(0));
+            StartCoroutine(collidertoggle(4));
+            print("fall");
+        }
+
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("player_punch"))
+        {
+            animator.SetFloat("Damage", 0);
+        }
+    }
+
     /// <summary>
     /// Update is called once per frame
     /// </summary>
     void Update()
     {
-        currentstate.Execute();
+        if(health > 0)
+        {
+            if(!animator.GetCurrentAnimatorStateInfo(0).IsName("Enemy1_fall"))
+            {
+                currentstate.Execute();
+            }
+        }
+        else if(health <= 0 && isDead == false)
+        {
+            animator.SetFloat("Damage", 90);
+            isDead = true;
+
+        }
+
+        if(isDead == true)
+        {
+            dietimer += Time.deltaTime;
+            if(dietimer >=3)
+            {
+                Destroy(this.gameObject);
+            }    
+
+        }
+
+        print(health);
+
 
         ClampInScreen();
 
@@ -96,7 +161,7 @@ public class Enemy1 : MonoBehaviour
 
     public void LocatePlayer()
     {
-        print("locating");
+        //print("locating");
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         Vector2 loc = player.transform.position;
         if (loc.x - this.transform.position.x > 0)
@@ -156,6 +221,20 @@ public class Enemy1 : MonoBehaviour
 
     #endregion
 
+
+    IEnumerator collidertoggle(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        colliderhitbox.enabled = !colliderhitbox.enabled;
+     }
+
+    IEnumerator Death(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        Destroy(this.gameObject);
+    }
 
 
     #region Functions (screenclamp and mirror)

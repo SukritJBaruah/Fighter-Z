@@ -9,9 +9,9 @@ public static class ScreenUtils
 {
 	#region Fields
 
-	static float BGTop = 0.05f;
+	static float BGTop = 0.0001f;
 
-	static float BGBottom = 0.9f;
+	static float BGBottom = 0.83f;
 
 	// cached for efficient boundary checking
 	static float screenLeft;

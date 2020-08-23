@@ -1,7 +1,9 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.Collections;
 using UnityEngine;
 
 //run jump attack needs to be fixed
@@ -54,6 +56,18 @@ public class Sukrit : MonoBehaviour
     private bool facingright;
     #endregion
 
+
+    //implementing punch damage collider
+    [SerializeField]
+    private BoxCollider2D punch;
+
+    float punchendtimer = 0f;
+
+    //player stats
+    float health = 500;
+    float energy = 500;
+
+
     /// <summary>
     /// Use this for initialization
     /// </summary>
@@ -65,6 +79,8 @@ public class Sukrit : MonoBehaviour
         colliderHalfWidth = collider.size.x / 2;
         colliderHalfHeight = collider.size.y / 2;
         animator = GetComponent<Animator>();
+
+        punch.enabled = true;
 
     }
 
@@ -128,7 +144,7 @@ public class Sukrit : MonoBehaviour
                             rundirection = -1f;
                         }
                     }
-                    print("running"); // debug remove later
+                    //print("running"); // debug remove later
                 }
                 lastPressedRight = Time.time;
             }
@@ -140,7 +156,7 @@ public class Sukrit : MonoBehaviour
                 {
                     isRunning = false;
                     animator.SetBool("run", false);
-                    print("not running"); // debug remove later
+                    //print("not running"); // debug remove later
                 }
                 else
                     position.x += rundirection * RunUnitsPerSecond * Time.deltaTime;
@@ -251,12 +267,14 @@ public class Sukrit : MonoBehaviour
             else
             {
                 //set attack code
-
+                punch.enabled = true;
+                punchendtimer = 0f;
+                //moving the player forward by negligible amount so that boxcollider can be detected again
+                transform.Translate(GetDirection() * MoveUnitsPerSecond * Time.deltaTime * 0.1f);
                 //end
                 animator.SetBool("Attack1", true);
                 canMove = false;
 
-                print("Attack 1");
             }
         }
         else
@@ -266,6 +284,13 @@ public class Sukrit : MonoBehaviour
             {
                 canMove = true;
             }
+
+            punchendtimer += Time.smoothDeltaTime;
+            if(punchendtimer > 0.05f)
+            {
+                punch.enabled = false;
+            }
+
 
         }
 
@@ -407,4 +432,9 @@ public class Sukrit : MonoBehaviour
     #endregion
 
 
+
+    public Vector2 GetDirection()
+    {
+        return facingright ? Vector2.right : Vector2.left;
+    }
 }
