@@ -46,9 +46,10 @@ public class Sukrit : MonoBehaviour
     //run variables
     const float RunUnitsPerSecond = 2f;
     bool isRunning = false;
-    float lastPressedRight = -999f;
-    bool wasRightPressed = false;
     float rundirection = 0f;
+
+    float ButtonCooler = 0.5f; // Half a second before reset
+    int ButtonCount = 0;
 
     //animation
     public Animator animator;
@@ -166,11 +167,12 @@ public class Sukrit : MonoBehaviour
                     #region RUN
                     //run anim
                     //double tap to run
-                    bool isRightPressed = Math.Abs(Input.GetAxis("Horizontal")) > 0.1f;
-                    if (isRightPressed && !wasRightPressed)
+                    if (Input.GetButtonDown("Horizontal"))
                     {
-                        if (Time.time < lastPressedRight + 0.5f)
-                        { // half a second window for double-tapping
+
+                        if (ButtonCooler > 0 && ButtonCount == 1/*Number of Taps you want Minus One*/)
+                        {
+                            //Has double tapped
                             isRunning = true;
                             animator.SetBool("run", true);
                             rundirection = Input.GetAxis("Horizontal");
@@ -185,11 +187,23 @@ public class Sukrit : MonoBehaviour
                                     rundirection = -1f;
                                 }
                             }
-                            //print("running"); // debug remove later
+                            print("running");
                         }
-                        lastPressedRight = Time.time;
+                        else
+                        {
+                            ButtonCooler = 0.5f;
+                            ButtonCount += 1;
+                        }
                     }
-                    wasRightPressed = isRightPressed;
+
+                    if (ButtonCooler > 0)
+                    {
+                        ButtonCooler -= 1 * Time.deltaTime;
+                    }
+                    else
+                    {
+                        ButtonCount = 0;
+                    }
 
                     if (isRunning) //everything while running
                     {
@@ -246,7 +260,8 @@ public class Sukrit : MonoBehaviour
                     if (isRunning && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_roll"))
                     {
                         //roll code goes here, make him untouchable
-
+                        StartCoroutine(collidertoggle(0));
+                        StartCoroutine(collidertoggle(0.76f));
                         //end
 
                         //reset run anim
@@ -256,7 +271,7 @@ public class Sukrit : MonoBehaviour
                         isRolling = true;
                         animator.SetBool("roll", true);
                         rolltime = 0.75f;
-                        print("rolling"); // debug
+                        //print("rolling"); // debug
                                           //rolls
 
                     }
