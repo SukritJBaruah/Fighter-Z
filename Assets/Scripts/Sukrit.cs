@@ -187,7 +187,7 @@ public class Sukrit : MonoBehaviour
                                     rundirection = -1f;
                                 }
                             }
-                            print("running");
+                            //print("running");
                         }
                         else
                         {
