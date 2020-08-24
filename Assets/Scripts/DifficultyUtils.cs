@@ -56,7 +56,7 @@ public class DifficultyUtils : MonoBehaviour
                 meleey = 0.1f;
                 idealDuration = 0.1f;
                 walkDuration = 5f;
-                attaccCooldown = 0.2f;
+                attaccCooldown = 0.25f;
                 locateAfter = 0f;
                 break;
 
