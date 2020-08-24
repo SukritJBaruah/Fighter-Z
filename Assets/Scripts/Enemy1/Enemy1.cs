@@ -112,11 +112,20 @@ public class Enemy1 : MonoBehaviour
             //print("fall");
         }
 
+        if(other.gameObject.CompareTag("player_kick"))
+        {
+            health -= 80f;
+            hitstaken = 0;
+            animator.SetFloat("Damage", 80);
+            StartCoroutine(collidertoggle(0));
+            StartCoroutine(collidertoggle(4));
+        }
+
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("player_punch"))
+        if (other.gameObject.CompareTag("player_punch") || other.gameObject.CompareTag("player_kick"))
         {
             animator.SetFloat("Damage", 0);
         }

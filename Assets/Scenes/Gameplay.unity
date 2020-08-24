@@ -840,19 +840,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1777348916}
     m_Modifications:
-    - target: {fileID: 81514546, guid: 0691d06545989f54caa3d0106e482b71, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.221
-      objectReference: {fileID: 0}
-    - target: {fileID: 1212119996, guid: 0691d06545989f54caa3d0106e482b71, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.221
-      objectReference: {fileID: 0}
     - target: {fileID: 2646877326434742387, guid: 0691d06545989f54caa3d0106e482b71,
         type: 3}
-      propertyPath: playerTr
+      propertyPath: kick
       value: 
-      objectReference: {fileID: 1141432471}
+      objectReference: {fileID: 2646877327440826602}
     - target: {fileID: 2646877326434742398, guid: 0691d06545989f54caa3d0106e482b71,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -915,6 +907,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0691d06545989f54caa3d0106e482b71, type: 3}
+--- !u!61 &2646877327440826602 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 1104551535, guid: 0691d06545989f54caa3d0106e482b71,
+    type: 3}
+  m_PrefabInstance: {fileID: 2646877327440826601}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3383636813116400689
 PrefabInstance:
   m_ObjectHideFlags: 0

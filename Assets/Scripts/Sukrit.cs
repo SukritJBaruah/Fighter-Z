@@ -62,6 +62,9 @@ public class Sukrit : MonoBehaviour
     [SerializeField]
     private BoxCollider2D punch;
 
+    [SerializeField]
+    private BoxCollider2D kick;
+
     float punchendtimer = 0f;
     int hitstaken = 0;
     BoxCollider2D colliderhitbox;
@@ -89,6 +92,7 @@ public class Sukrit : MonoBehaviour
         animator = GetComponent<Animator>();
 
         punch.enabled = false;
+        kick.enabled = false;
 
     }
 
@@ -379,7 +383,8 @@ public class Sukrit : MonoBehaviour
                 if (isRunAttack && animator.GetCurrentAnimatorStateInfo(0).IsName("Player_RunAttack"))
                 {
                     //Hit code goes here
-
+                    kick.enabled = true;
+                    punchendtimer = 0f;
                     //end
                     runAttackTime -= Time.deltaTime;
                     if (runAttackTime > 0f)
@@ -389,10 +394,17 @@ public class Sukrit : MonoBehaviour
                         transform.position = position;
                     }
                     // stop
+                    punchendtimer += Time.smoothDeltaTime;
+                    if (punchendtimer > 0.05f)
+                    {
+                        punch.enabled = false;
+                    }
+
                     if (runAttackTime <= 0f)
                     {
                         animator.SetBool("runattack", false);
                         isRunAttack = false;
+                        kick.enabled = false;
                         runAttackTime = 0.33f;
                     }
                 }
