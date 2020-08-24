@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class IAttackState : IEnemyStates
@@ -10,6 +11,7 @@ public class IAttackState : IEnemyStates
 
     float attaccTimer = 0;
     bool canattacc;
+    float punchendtimer= 0f;
 
     public void Enter(Enemy1 enemy1)
     {
@@ -20,7 +22,10 @@ public class IAttackState : IEnemyStates
 
     public void Execute()
     {
-        Attacc();
+        if(!animator.GetCurrentAnimatorStateInfo(0).IsName("Enemy1_fall") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Enemy1_damage"))
+        {
+            Attacc();
+        }
         if(!enemy.InMeleeRange())
         {
             enemy.ChangeState(new IIdealState());
@@ -41,6 +46,12 @@ public class IAttackState : IEnemyStates
         if (!canattacc)
         {
             enemy.Animator.SetBool("Attack1", false);
+
+            punchendtimer += Time.smoothDeltaTime;
+            if (punchendtimer > 0.05f)
+            {
+                enemy.enemy_punch.enabled = false;
+            }
         }
 
         attaccTimer += Time.deltaTime;
@@ -54,9 +65,14 @@ public class IAttackState : IEnemyStates
         {
             canattacc = false;
             enemy.Animator.SetBool("Attack1", true);
+            //attack code punch
+            enemy.enemy_punch.enabled = true;
+            punchendtimer = 0f;
+
             animator.SetFloat("Velocity", 0);
             //move a lil forward, removed if not necessary
             enemy.transform.Translate(enemy.GetDirection() * Enemy1.MoveUnitsPerSecond * Time.deltaTime * 0.1f);
         }
     }
+
 }

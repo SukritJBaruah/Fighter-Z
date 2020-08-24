@@ -62,10 +62,15 @@ public class Sukrit : MonoBehaviour
     private BoxCollider2D punch;
 
     float punchendtimer = 0f;
+    int hitstaken = 0;
+    BoxCollider2D colliderhitbox;
 
     //player stats
-    float health = 500;
-    float energy = 500;
+    public static float health;
+    public static float energy;
+
+    bool isDead = false;
+    float dietimer = 0f;
 
 
     /// <summary>
@@ -73,15 +78,46 @@ public class Sukrit : MonoBehaviour
     /// </summary>
     void Start()
     {
+        health = 500;
+        energy = 500;
         facingright = true;
         // save for efficiency
-        BoxCollider2D collider = GetComponent<BoxCollider2D>();
-        colliderHalfWidth = collider.size.x / 2;
-        colliderHalfHeight = collider.size.y / 2;
+        colliderhitbox = GetComponent<BoxCollider2D>();
+        colliderHalfWidth = colliderhitbox.size.x / 2;
+        colliderHalfHeight = colliderhitbox.size.y / 2;
         animator = GetComponent<Animator>();
 
-        punch.enabled = true;
+        punch.enabled = false;
 
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("enemy_punch") && hitstaken != 2)
+        {
+            health -= 30f;
+            hitstaken += 1;
+            animator.SetFloat("Damage", 30);
+            //print("damage");
+        }
+        else if (other.gameObject.CompareTag("enemy_punch") && hitstaken == 2)
+        {
+            health -= 30f;
+            hitstaken = 0;
+            animator.SetFloat("Damage", 90);
+            StartCoroutine(collidertoggle(0));
+            StartCoroutine(collidertoggle(4));
+            //print("fall");
+        }
+
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("enemy_punch"))
+        {
+            animator.SetFloat("Damage", 0);
+        }
     }
 
     /// <summary>
@@ -89,263 +125,288 @@ public class Sukrit : MonoBehaviour
     /// </summary>
     void Update()
     {
-        if (canMove == true)
+        if (health > 0)
         {
-            #region Movement
-            //
-            #region WALK
-            // move based on input walking
-            Vector3 position = transform.position;
-            float horizontalInput = Input.GetAxis("Horizontal");
-            float verticalInput = Input.GetAxis("Vertical");
-            if (horizontalInput != 0)
+            if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Player_fall") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player1_damage"))
             {
-                position.x += horizontalInput * MoveUnitsPerSecond * Time.deltaTime;
-                animator.SetFloat("Velocity", Math.Abs(horizontalInput));
-                Flip(horizontalInput);
-                if (Input.GetAxis("Defend") > 0f) { goto defanim; }//go to defend while he was walking
-                if (Input.GetButtonDown("Attack")) { goto attackanim; }//go to attack while he was walking
-            }
-            if(!isjumping) //cant move vertically while jumping
-            {
-                if (verticalInput != 0)
+
+                if (canMove == true)
                 {
-                    position.y += verticalInput * MoveUnitsPerSecond * Time.deltaTime * verticalmultiplier;
-                    animator.SetFloat("Velocity", Math.Abs(verticalInput));
-                    if (Input.GetAxis("Defend") > 0f) { goto defanim; }//go to defend while he was walking
-                    if (Input.GetButtonDown("Attack")) { goto attackanim; }//go to attack while he was walking
-                }
-            }
-
-            //diagonal fix
-            //needs to fix diagonal velocity
-
-            #endregion
-
-            #region RUN
-            //run anim
-            //double tap to run
-            bool isRightPressed = Math.Abs(Input.GetAxis("Horizontal")) > 0.1f;
-            if (isRightPressed && !wasRightPressed)
-            {
-                if (Time.time < lastPressedRight + 0.5f)
-                { // half a second window for double-tapping
-                    isRunning = true;
-                    animator.SetBool("run", true);
-                    rundirection = Input.GetAxis("Horizontal");
-                    if (rundirection > 0)
+                    #region Movement
+                    //
+                    #region WALK
+                    // move based on input walking
+                    Vector3 position = transform.position;
+                    float horizontalInput = Input.GetAxis("Horizontal");
+                    float verticalInput = Input.GetAxis("Vertical");
+                    if (horizontalInput != 0)
                     {
-                        rundirection = 1f;
+                        position.x += horizontalInput * MoveUnitsPerSecond * Time.deltaTime;
+                        animator.SetFloat("Velocity", Math.Abs(horizontalInput));
+                        Flip(horizontalInput);
+                        if (Input.GetAxis("Defend") > 0f) { goto defanim; }//go to defend while he was walking
+                        if (Input.GetButtonDown("Attack")) { goto attackanim; }//go to attack while he was walking
                     }
-                    else
+                    if (!isjumping) //cant move vertically while jumping
                     {
-                        if (rundirection < 0)
+                        if (verticalInput != 0)
                         {
-                            rundirection = -1f;
+                            position.y += verticalInput * MoveUnitsPerSecond * Time.deltaTime * verticalmultiplier;
+                            animator.SetFloat("Velocity", Math.Abs(verticalInput));
+                            if (Input.GetAxis("Defend") > 0f) { goto defanim; }//go to defend while he was walking
+                            if (Input.GetButtonDown("Attack")) { goto attackanim; }//go to attack while he was walking
                         }
                     }
-                    //print("running"); // debug remove later
-                }
-                lastPressedRight = Time.time;
-            }
-            wasRightPressed = isRightPressed;
 
-            if (isRunning) //everything while running
-            {
-                if (Math.Abs(Input.GetAxis("Horizontal")) > 0.4f) //for stopping while running
+                    //diagonal fix
+                    //needs to fix diagonal velocity
+
+                    #endregion
+
+                    #region RUN
+                    //run anim
+                    //double tap to run
+                    bool isRightPressed = Math.Abs(Input.GetAxis("Horizontal")) > 0.1f;
+                    if (isRightPressed && !wasRightPressed)
+                    {
+                        if (Time.time < lastPressedRight + 0.5f)
+                        { // half a second window for double-tapping
+                            isRunning = true;
+                            animator.SetBool("run", true);
+                            rundirection = Input.GetAxis("Horizontal");
+                            if (rundirection > 0)
+                            {
+                                rundirection = 1f;
+                            }
+                            else
+                            {
+                                if (rundirection < 0)
+                                {
+                                    rundirection = -1f;
+                                }
+                            }
+                            //print("running"); // debug remove later
+                        }
+                        lastPressedRight = Time.time;
+                    }
+                    wasRightPressed = isRightPressed;
+
+                    if (isRunning) //everything while running
+                    {
+                        if (Math.Abs(Input.GetAxis("Horizontal")) > 0.4f) //for stopping while running
+                        {
+                            isRunning = false;
+                            animator.SetBool("run", false);
+                            //print("not running"); // debug remove later
+                        }
+                        else
+                            position.x += rundirection * RunUnitsPerSecond * Time.deltaTime;
+                    }
+
+                    //RUN END
+                    #endregion
+
+                    // move character to new position
+                    transform.position = position;
+
+                    #endregion
+                }
+
+                #region Jump
+                if (!isjumping)
                 {
-                    isRunning = false;
-                    animator.SetBool("run", false);
-                    //print("not running"); // debug remove later
+                    maxJumpHeight = 0.8f;
+                    groundPos = transform.position;
+                    groundHeight = transform.position.y;
+                    maxJumpHeight = transform.position.y + maxJumpHeight;
+                }
+
+                if (!isDefending)
+                {
+                    if (Input.GetButtonDown("Jump") && !isjumping)
+                    {
+                        groundPos = transform.position;
+                        inputJump = true;
+                        isjumping = true;
+                        animator.SetBool("jumping", true);
+                        StartCoroutine("Jump");
+                    }
+                }
+
+
+            #endregion
+
+
+            #region defend
+            defanim:
+                if (Input.GetAxis("Defend") > 0f && rolltime <= 0)
+                {
+                    #region Roll if hit defend while running
+                    //ROLL code while running
+                    if (isRunning && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_roll"))
+                    {
+                        //roll code goes here, make him untouchable
+
+                        //end
+
+                        //reset run anim
+                        isRunning = false;
+                        animator.SetBool("run", false);
+
+                        isRolling = true;
+                        animator.SetBool("roll", true);
+                        rolltime = 0.75f;
+                        print("rolling"); // debug
+                                          //rolls
+
+                    }
+                    #endregion
+                    else
+                    {
+                        //set defend code
+
+                        //end
+                        animator.SetBool("defend", true);
+                        canMove = false;
+                        isDefending = true;
+                    }
                 }
                 else
-                    position.x += rundirection * RunUnitsPerSecond * Time.deltaTime;
-            }
-
-            //RUN END
-            #endregion
-
-            // move character to new position
-            transform.position = position;
-
-            #endregion
-        }
-
-        #region Jump
-        if(!isjumping)
-        {
-            maxJumpHeight = 0.8f;
-            groundPos = transform.position;
-            groundHeight = transform.position.y;
-            maxJumpHeight = transform.position.y + maxJumpHeight;
-        }
-
-        if(!isDefending)
-        {
-            if (Input.GetButtonDown("Jump") && !isjumping)
-            {
-                groundPos = transform.position;
-                inputJump = true;
-                isjumping = true;
-                animator.SetBool("jumping", true);
-                StartCoroutine("Jump");
-            }
-        }
-
-
-        #endregion
-
-
-        #region defend
-    defanim:
-            if(Input.GetAxis("Defend")>0f && rolltime <= 0)
-            {
-                #region Roll if hit defend while running
-                //ROLL code while running
-                if (isRunning && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_roll"))
                 {
-                    //roll code goes here, make him untouchable
+                    animator.SetBool("defend", false);
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Player_attack1")) //used for attack variable
+                    {
+                        canMove = true;
+                        isDefending = false;
+                    }
+                }
 
-                    //end
+            #endregion
 
-                    //reset run anim
-                    isRunning = false;
-                    animator.SetBool("run", false);
+            #region attack
+            attackanim:
+                if (Input.GetButtonDown("Attack") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_RunAttack"))
+                {
+                    #region Run_attack
+                    //Run attack
+                    if (isRunning)
+                    {
+                        //runn attack code goes here
 
-                    isRolling = true;
-                    animator.SetBool("roll", true);
-                    rolltime = 0.75f;
-                    print("rolling"); // debug
-                    //rolls
+                        //end
 
+                        //reset run anim
+                        isRunning = false;
+                        animator.SetBool("run", false);
+
+                        isRunAttack = true;
+                        animator.SetBool("runattack", true);
+                        print("run attack"); // debug
+
+                    }
+                    #endregion
+                    else
+                    {
+                        //set attack code
+                        punch.enabled = true;
+                        punchendtimer = 0f;
+                        //moving the player forward by negligible amount so that boxcollider can be detected again
+                        transform.Translate(GetDirection() * MoveUnitsPerSecond * Time.deltaTime * 0.1f);
+                        //end
+                        animator.SetBool("Attack1", true);
+                        canMove = false;
+
+                    }
+                }
+                else
+                {
+                    animator.SetBool("Attack1", false);
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Player_attack1"))
+                    {
+                        canMove = true;
+                    }
+
+                    punchendtimer += Time.smoothDeltaTime;
+                    if (punchendtimer > 0.05f)
+                    {
+                        punch.enabled = false;
+                    }
+
+
+                }
+
+
+                #endregion
+
+
+                #region rolling and stop rolling
+                //keep rolling
+                if (isRolling)
+                {
+                    rolltime -= Time.deltaTime;
+                    if (rolltime > 0f)
+                    {
+                        Vector3 position = transform.position;
+                        position.x += rundirection * RunUnitsPerSecond * Time.deltaTime;
+                        transform.position = position;
+                    }
+                    //roll stop
+                    if (rolltime <= 0f)
+                    {
+                        isRolling = false;
+                        animator.SetBool("roll", false);
+                    }
                 }
                 #endregion
-                else
+
+
+                #region run attack
+                if (isRunAttack && animator.GetCurrentAnimatorStateInfo(0).IsName("Player_RunAttack"))
                 {
-                    //set defend code
+                    //Hit code goes here
 
                     //end
-                    animator.SetBool("defend", true);
-                    canMove = false;
-                    isDefending = true;
+                    runAttackTime -= Time.deltaTime;
+                    if (runAttackTime > 0f)
+                    {
+                        Vector3 position = transform.position;
+                        position.x += rundirection * RunUnitsPerSecond * Time.deltaTime;
+                        transform.position = position;
+                    }
+                    // stop
+                    if (runAttackTime <= 0f)
+                    {
+                        animator.SetBool("runattack", false);
+                        isRunAttack = false;
+                        runAttackTime = 0.33f;
+                    }
                 }
-            }
-            else
-            {
-                animator.SetBool("defend", false);
-                if(!animator.GetCurrentAnimatorStateInfo(0).IsName("Player_attack1")) //used for attack variable
-                {
-                    canMove = true;
-                    isDefending = false;
-                }
-            }
 
-            #endregion
+                #endregion
 
-        #region attack
-        attackanim:
-        if(Input.GetButtonDown("Attack") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_RunAttack"))
-        {
-            #region Run_attack
-            //Run attack
-            if (isRunning)
-            {
-                //runn attack code goes here
-
-                //end
-
-                //reset run anim
-                isRunning = false;
-                animator.SetBool("run", false);
-
-                isRunAttack = true;
-                animator.SetBool("runattack", true);
-                print("run attack"); // debug
-
-            }
-            #endregion
-            else
-            {
-                //set attack code
-                punch.enabled = true;
-                punchendtimer = 0f;
-                //moving the player forward by negligible amount so that boxcollider can be detected again
-                transform.Translate(GetDirection() * MoveUnitsPerSecond * Time.deltaTime * 0.1f);
-                //end
-                animator.SetBool("Attack1", true);
-                canMove = false;
 
             }
         }
-        else
+        else if (health <= 0 && isDead == false)
         {
-            animator.SetBool("Attack1", false);
-            if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Player_attack1"))
-            {
-                canMove = true;
-            }
-
-            punchendtimer += Time.smoothDeltaTime;
-            if(punchendtimer > 0.05f)
-            {
-                punch.enabled = false;
-            }
-
+            animator.SetFloat("Damage", 90);
+            isDead = true;
 
         }
 
 
-        #endregion
-
-
-        #region rolling and stop rolling
-        //keep rolling
-        if (isRolling)
+        if (isDead == true)
         {
-            rolltime -= Time.deltaTime;
-            if (rolltime > 0f)
+            dietimer += Time.deltaTime;
+            if (dietimer >= 3)
             {
-                Vector3 position = transform.position;
-                position.x += rundirection * RunUnitsPerSecond * Time.deltaTime;
-                transform.position = position;
+                Destroy(this.gameObject);
             }
-            //roll stop
-            if (rolltime <= 0f)
-            {
-                isRolling = false;
-                animator.SetBool("roll", false);
-            }
+
         }
-        #endregion
-
-        
-        #region run attack
-        if(isRunAttack && animator.GetCurrentAnimatorStateInfo(0).IsName("Player_RunAttack"))
-        {
-            //Hit code goes here
-
-            //end
-            runAttackTime -= Time.deltaTime;
-            if (runAttackTime > 0f)
-            {
-                Vector3 position = transform.position;
-                position.x += rundirection * RunUnitsPerSecond * Time.deltaTime;
-                transform.position = position;
-            }
-            // stop
-            if (runAttackTime <= 0f)
-            {
-                animator.SetBool("runattack", false);
-                isRunAttack = false;
-                runAttackTime = 0.33f;
-            }
-        }
-
-        #endregion
-
 
         //clamp to screen
-        if(!isjumping)//check for jump
+        if (!isjumping)//check for jump
         {
             ClampInScreen();
         }
@@ -432,6 +493,24 @@ public class Sukrit : MonoBehaviour
     #endregion
 
 
+
+    #region damage and death func
+
+    IEnumerator collidertoggle(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        colliderhitbox.enabled = !colliderhitbox.enabled;
+    }
+
+    IEnumerator Death(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        Destroy(this.gameObject);
+    }
+
+    #endregion
 
     public Vector2 GetDirection()
     {

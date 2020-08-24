@@ -49,13 +49,16 @@ public class Enemy1 : MonoBehaviour
 
     #endregion
 
+    //attack punch
+    public BoxCollider2D enemy_punch;
+
     //damage
     int hitstaken = 0;
     BoxCollider2D colliderhitbox;
 
     //enemy1 stats
-    float health = 500;
-    float energy = 500;
+    public static float health;
+    public static float energy;
 
     bool isDead = false;
     float dietimer = 0f;
@@ -72,12 +75,18 @@ public class Enemy1 : MonoBehaviour
     /// </summary>
     void Start()
     {
+        health = 500;
+        energy = 500;
+
         facingright = true;
         // save for efficiency
         colliderhitbox = GetComponent<BoxCollider2D>();
         colliderHalfWidth = colliderhitbox.size.x / 2;
         colliderHalfHeight = colliderhitbox.size.y / 2;
         animator = GetComponent<Animator>();
+
+
+        enemy_punch.enabled = false;
 
 
         ChangeState(new IIdealState());
@@ -91,7 +100,7 @@ public class Enemy1 : MonoBehaviour
             health -= 30f;
             hitstaken += 1;
             animator.SetFloat("Damage", 30);
-            print("damage");
+            //print("damage");
         }
         else if(other.gameObject.CompareTag("player_punch") && hitstaken == 2)
         {
@@ -100,7 +109,7 @@ public class Enemy1 : MonoBehaviour
             animator.SetFloat("Damage", 90);
             StartCoroutine(collidertoggle(0));
             StartCoroutine(collidertoggle(4));
-            print("fall");
+            //print("fall");
         }
 
     }
@@ -142,7 +151,7 @@ public class Enemy1 : MonoBehaviour
 
         }
 
-        print(health);
+        //print(health);
 
 
         ClampInScreen();
@@ -222,12 +231,14 @@ public class Enemy1 : MonoBehaviour
     #endregion
 
 
+    #region damage and death func
+
     IEnumerator collidertoggle(float time)
     {
         yield return new WaitForSeconds(time);
 
         colliderhitbox.enabled = !colliderhitbox.enabled;
-     }
+    }
 
     IEnumerator Death(float time)
     {
@@ -235,6 +246,8 @@ public class Enemy1 : MonoBehaviour
 
         Destroy(this.gameObject);
     }
+
+    #endregion
 
 
     #region Functions (screenclamp and mirror)

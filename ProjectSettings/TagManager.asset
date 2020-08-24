@@ -7,6 +7,7 @@ TagManager:
   - DifficultyUtils
   - Enemy
   - player_punch
+  - enemy_punch
   layers:
   - Default
   - TransparentFX
