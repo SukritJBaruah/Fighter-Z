@@ -43,6 +43,7 @@ public class IAttackState : IEnemyStates
 
     private void Attacc()
     {
+        animator.SetFloat("Velocity", 0);
         if (!canattacc)
         {
             enemy.Animator.SetBool("Attack1", false);
@@ -63,14 +64,14 @@ public class IAttackState : IEnemyStates
 
         if(canattacc)
         {
+            animator.SetFloat("Velocity", 0);
             canattacc = false;
             enemy.Animator.SetBool("Attack1", true);
             //attack code punch
             enemy.enemy_punch.enabled = true;
             punchendtimer = 0f;
 
-            animator.SetFloat("Velocity", 0);
-            //move a lil forward, removed if not necessary
+            //move a lil forward, remove if not necessary
             enemy.transform.Translate(enemy.GetDirection() * Enemy1.MoveUnitsPerSecond * Time.deltaTime * 0.1f);
         }
     }

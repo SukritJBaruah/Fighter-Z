@@ -98,7 +98,7 @@ public class Sukrit : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("enemy_punch") && hitstaken != 2)
+        if (other.gameObject.CompareTag("enemy_punch") && hitstaken != 2 && !isDefending)
         {
             health -= 30f;
             hitstaken += 1;
@@ -113,6 +113,12 @@ public class Sukrit : MonoBehaviour
             StartCoroutine(collidertoggle(0));
             StartCoroutine(collidertoggle(4));
             //print("fall");
+        }
+        if (other.gameObject.CompareTag("enemy_punch") && isDefending)
+        {
+            health -= 2f;
+            animator.SetFloat("Damage", 2);
+            //print("damage");
         }
 
     }
@@ -320,7 +326,7 @@ public class Sukrit : MonoBehaviour
 
                         isRunAttack = true;
                         animator.SetBool("runattack", true);
-                        print("run attack"); // debug
+                        //print("run attack"); // debug
 
                     }
                     #endregion
