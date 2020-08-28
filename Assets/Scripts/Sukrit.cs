@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using Unity.Collections;
 using UnityEngine;
 
@@ -61,6 +62,9 @@ public class Sukrit : MonoBehaviour
     //implementing punch damage collider
     [SerializeField]
     private BoxCollider2D punch;
+
+    [SerializeField]
+    private GameObject blastPrefab;
 
     [SerializeField]
     private BoxCollider2D kick;
@@ -136,6 +140,14 @@ public class Sukrit : MonoBehaviour
     /// </summary>
     void Update()
     {
+        animator.SetBool("isblastanim", false);
+
+        //energy regen
+        if(energy<500)
+        {
+            energy += 0.05f;
+        }
+
         if (health > 0)
         {
             if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Player_fall") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player1_damage"))
@@ -294,12 +306,26 @@ public class Sukrit : MonoBehaviour
                         animator.SetBool("defend", true);
                         canMove = false;
                         isDefending = true;
+
+
+
+                        // special move blast
+                        if (Input.GetAxis("Horizontal") != 0 && Input.GetButtonDown("Attack") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_blast"))
+                        {
+                            animator.SetBool("isblastanim", true);
+                            energy -= 90;
+                            blast(4);
+                            animator.SetFloat("Velocity", 0);
+                            isDefending = false;
+                        }
+
+
                     }
                 }
                 else
                 {
                     animator.SetBool("defend", false);
-                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Player_attack1")) //used for attack variable
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Player_attack1") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_blast")) //used for attack variable
                     {
                         canMove = true;
                         isDefending = false;
@@ -310,7 +336,7 @@ public class Sukrit : MonoBehaviour
 
             #region attack
             attackanim:
-                if (Input.GetButtonDown("Attack") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_RunAttack"))
+                if (Input.GetButtonDown("Attack") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_RunAttack") && !isDefending)
                 {
                     #region Run_attack
                     //Run attack
@@ -346,7 +372,7 @@ public class Sukrit : MonoBehaviour
                 else
                 {
                     animator.SetBool("Attack1", false);
-                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Player_attack1"))
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Player_attack1") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_blast"))
                     {
                         canMove = true;
                     }
@@ -525,6 +551,42 @@ public class Sukrit : MonoBehaviour
     }
     #endregion
 
+
+    #region special moves
+    public async void blast(int value)
+    {
+        int x = value;
+
+        while(x>0)
+        {
+            Vector3 blastSpawn = transform.position;
+            System.Random rnd = new System.Random();
+
+            if (facingright)
+            {
+
+                blastSpawn.x += 0.15f;
+                blastSpawn.y -= 0.06f;
+                blastSpawn.y += ((float)(rnd.Next(0, 11) - rnd.Next(0, 11)) / 100);
+                GameObject tmp = (GameObject)Instantiate(blastPrefab, blastSpawn, Quaternion.identity);
+                tmp.GetComponent<player_blast>().Initialize(Vector2.right);
+            }
+            else
+            {
+                blastSpawn.x -= 0.15f;
+                blastSpawn.y -= 0.06f;
+                blastSpawn.y += ((float)(rnd.Next(0, 11) - rnd.Next(0, 11)) / 100);
+                GameObject tmp = (GameObject)Instantiate(blastPrefab, blastSpawn, Quaternion.Euler(new Vector3(0, 0, -180)));
+                tmp.GetComponent<player_blast>().Initialize(Vector2.left);
+            }
+
+            x -= 1;
+            await Task.Delay(282);
+            
+        }
+    }
+
+    #endregion
 
 
     #region damage and death func

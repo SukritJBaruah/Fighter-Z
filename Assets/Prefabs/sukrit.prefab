@@ -220,7 +220,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.9, y: 0.86}
+    oldSize: {x: 0.88, y: 0.86}
     newSize: {x: 0.9, y: 0.86}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -246,6 +246,9 @@ MonoBehaviour:
   isjumping: 0
   animator: {fileID: 0}
   punch: {fileID: 1626499860}
+  blastPrefab: {fileID: 3544136516942268229, guid: cf64ac10a68df5b4ebcd9e9dae30358f,
+    type: 3}
+  kick: {fileID: 1104551535}
 --- !u!95 &2646877326434742386
 Animator:
   serializedVersion: 3

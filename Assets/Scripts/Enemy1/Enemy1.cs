@@ -121,11 +121,21 @@ public class Enemy1 : MonoBehaviour
             StartCoroutine(collidertoggle(4));
         }
 
+        if (other.gameObject.CompareTag("Player_blast"))
+        {
+            health -= -40f;
+            hitstaken = 0;
+            animator.SetFloat("Damage", 80);
+            StartCoroutine(collidertoggle(0));
+            StartCoroutine(collidertoggle(4));
+            //print("Blast fall");
+        }
+
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("player_punch") || other.gameObject.CompareTag("player_kick"))
+        if (other.gameObject.CompareTag("player_punch") || other.gameObject.CompareTag("player_kick") || other.gameObject.CompareTag("Player_blast"))
         {
             animator.SetFloat("Damage", 0);
         }
