@@ -248,6 +248,8 @@ MonoBehaviour:
   punch: {fileID: 1626499860}
   blastPrefab: {fileID: 3544136516942268229, guid: cf64ac10a68df5b4ebcd9e9dae30358f,
     type: 3}
+  bigblastPrefab: {fileID: 4243773808492226666, guid: 84081a850d45937468d9d7cc16c5f5a1,
+    type: 3}
   kick: {fileID: 1104551535}
 --- !u!95 &2646877326434742386
 Animator:

@@ -67,6 +67,9 @@ public class Sukrit : MonoBehaviour
     private GameObject blastPrefab;
 
     [SerializeField]
+    private GameObject bigblastPrefab;
+
+    [SerializeField]
     private BoxCollider2D kick;
 
     float punchendtimer = 0f;
@@ -140,10 +143,17 @@ public class Sukrit : MonoBehaviour
     /// </summary>
     void Update()
     {
+        //special attack anim end
         animator.SetBool("isblastanim", false);
+        animator.SetBool("bigblastanim", false);
+        //walk anim bug fix after big blast
+        if(animator.GetCurrentAnimatorStateInfo(0).IsName("Player_big_plast"))
+        {
+            animator.SetFloat("Velocity", 0);
+        }
 
         //energy regen
-        if(energy<500)
+        if (energy<500)
         {
             energy += 0.05f;
         }
@@ -310,7 +320,7 @@ public class Sukrit : MonoBehaviour
 
 
                         // special move blast
-                        if (Input.GetAxis("Horizontal") != 0 && Input.GetButtonDown("Attack") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_blast"))
+                        if (energy>=90 && Input.GetAxis("Horizontal") != 0 && Input.GetButtonDown("Attack") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_blast"))
                         {
                             animator.SetBool("isblastanim", true);
                             energy -= 90;
@@ -319,13 +329,24 @@ public class Sukrit : MonoBehaviour
                             isDefending = false;
                         }
 
+                        // big blast
+                        if (energy >= 250 && Input.GetAxis("Horizontal") != 0 && Input.GetButtonDown("Jump") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_big_plast"))
+                        {
+                            animator.SetBool("bigblastanim", true);
+                            energy -= 250;
+                            big_blast();
+                            animator.SetFloat("Velocity", 0);
+                            isDefending = false;
+                        }
+
+
 
                     }
                 }
                 else
                 {
                     animator.SetBool("defend", false);
-                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Player_attack1") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_blast")) //used for attack variable
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Player_attack1") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_blast") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_big_plast")) //used for attack variable
                     {
                         canMove = true;
                         isDefending = false;
@@ -372,7 +393,7 @@ public class Sukrit : MonoBehaviour
                 else
                 {
                     animator.SetBool("Attack1", false);
-                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Player_attack1") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_blast"))
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Player_attack1") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_blast") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_big_plast"))
                     {
                         canMove = true;
                     }
@@ -583,6 +604,29 @@ public class Sukrit : MonoBehaviour
             x -= 1;
             await Task.Delay(282);
             
+        }
+    }
+
+    public async void big_blast()
+    {
+        await Task.Delay(999);
+        Vector3 blastSpawn = transform.position;
+        System.Random rnd = new System.Random();
+
+        if (facingright)
+        {
+
+            blastSpawn.x += 2.75f;
+            blastSpawn.y -= 0.06f;
+            GameObject tmp = (GameObject)Instantiate(bigblastPrefab, blastSpawn, Quaternion.identity);
+            //tmp.GetComponent<player_big_blast>().Initialize(Vector2.right);
+        }
+        else
+        {
+            blastSpawn.x -= 2.75f;
+            blastSpawn.y -= 0.06f;
+            GameObject tmp = (GameObject)Instantiate(bigblastPrefab, blastSpawn, Quaternion.Euler(new Vector3(0, 0, -180)));
+            //tmp.GetComponent<player_big_blast>().Initialize(Vector2.left);
         }
     }
 

@@ -123,7 +123,7 @@ public class Enemy1 : MonoBehaviour
 
         if (other.gameObject.CompareTag("Player_blast"))
         {
-            health -= -40f;
+            health -= 40f;
             hitstaken = 0;
             animator.SetFloat("Damage", 80);
             StartCoroutine(collidertoggle(0));
@@ -131,11 +131,20 @@ public class Enemy1 : MonoBehaviour
             //print("Blast fall");
         }
 
+        if (other.gameObject.CompareTag("Player_big_blast"))
+        {
+            health -= 180f;
+            hitstaken = 0;
+            animator.SetFloat("Damage", 180);
+            StartCoroutine(collidertoggle(0));
+            StartCoroutine(collidertoggle(4));
+        }
+
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("player_punch") || other.gameObject.CompareTag("player_kick") || other.gameObject.CompareTag("Player_blast"))
+        if (other.gameObject.CompareTag("player_punch") || other.gameObject.CompareTag("player_kick") || other.gameObject.CompareTag("Player_blast") || other.gameObject.CompareTag("Player_big_blast"))
         {
             animator.SetFloat("Damage", 0);
         }
@@ -170,7 +179,7 @@ public class Enemy1 : MonoBehaviour
 
         }
 
-        //print(health);
+        print(health);
 
 
         ClampInScreen();

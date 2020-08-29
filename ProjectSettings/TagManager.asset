@@ -10,6 +10,7 @@ TagManager:
   - enemy_punch
   - player_kick
   - Player_blast
+  - Player_big_blast
   layers:
   - Default
   - TransparentFX
