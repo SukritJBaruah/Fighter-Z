@@ -1,0 +1,57 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class IWalk2State : IEnemy2States
+{
+    DifficultyUtils difficultyUtils = GameObject.FindGameObjectWithTag("DifficultyUtils").GetComponent<DifficultyUtils>();
+    private Enemy2 enemy;
+    private float walkTimer;
+
+    private float locatorTimer;
+
+    public void Enter(Enemy2 enemy1)
+    {
+        this.enemy = enemy1;
+    }
+
+    public void Execute()
+    {
+        Walk();
+
+        locatorTimer += Time.deltaTime;
+        if (locatorTimer> difficultyUtils.locateAfter)
+        {
+            enemy.LocatePlayer();
+            locatorTimer = 0;
+        }
+        enemy.Move();
+    }
+
+    public void Exit()
+    {
+
+    }
+
+    public void OnTriggerEnter(Collider2D other)
+    {
+
+    }
+
+    private void Walk()
+    {
+        //goes to ideal after walk duration
+        walkTimer += Time.deltaTime;
+
+        if (walkTimer > difficultyUtils.walkDuration)
+        {
+            enemy.ChangeState(new IIdeal2State());
+        }
+
+        //check for
+        if(enemy.InMeleeRange())
+        {
+            enemy.ChangeState(new IAttack2State());
+        }
+    }
+}

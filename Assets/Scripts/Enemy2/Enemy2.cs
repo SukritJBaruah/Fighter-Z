@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
-public class Enemy1 : MonoBehaviour
+public class Enemy2 : MonoBehaviour
 {
     #region initial values
     // saved for efficiency
@@ -38,7 +38,7 @@ public class Enemy1 : MonoBehaviour
 
 
     // movement support
-    public const float MoveUnitsPerSecond = 0.7f;
+    public const float MoveUnitsPerSecond = 0.8f;
     const float verticalmultiplier = 0.6f;
     //run variables
     const float RunUnitsPerSecond = 2f;
@@ -69,7 +69,7 @@ public class Enemy1 : MonoBehaviour
     private bool facingright;
     private bool playerup;
 
-    private IEnemyStates currentstate;
+    private IEnemy2States currentstate;
     /// <summary>
     /// Use this for initialization
     /// </summary>
@@ -89,7 +89,7 @@ public class Enemy1 : MonoBehaviour
         enemy_punch.enabled = false;
 
 
-        ChangeState(new IIdealState());
+        ChangeState(new IIdeal2State());
 
     }
 
@@ -155,7 +155,13 @@ public class Enemy1 : MonoBehaviour
     /// </summary>
     void Update()
     {
-        if(health > 0)
+        //energy regen
+        if (energy < 500)
+        {
+            energy += 0.05f;
+        }
+
+        if (health > 0)
         {
             if(!animator.GetCurrentAnimatorStateInfo(0).IsName("Enemy1_fall"))
             {
@@ -317,7 +323,7 @@ public class Enemy1 : MonoBehaviour
     #endregion
 
 
-    public void ChangeState(IEnemyStates newstate)
+    public void ChangeState(IEnemy2States newstate)
     {
         if(currentstate !=null)
         {

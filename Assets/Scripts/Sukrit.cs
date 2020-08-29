@@ -157,6 +157,12 @@ public class Sukrit : MonoBehaviour
         {
             energy += 0.05f;
         }
+        //health regen
+        if(health < 250)
+        {
+            health += 0.08f;
+        }
+
 
         if (health > 0)
         {
@@ -333,7 +339,7 @@ public class Sukrit : MonoBehaviour
                         if (energy >= 250 && Input.GetAxis("Horizontal") != 0 && Input.GetButtonDown("Jump") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_big_plast"))
                         {
                             animator.SetBool("bigblastanim", true);
-                            energy -= 250;
+                            energy -= 200;
                             big_blast();
                             animator.SetFloat("Velocity", 0);
                             isDefending = false;
