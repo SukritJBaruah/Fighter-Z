@@ -128,11 +128,21 @@ public class Sukrit : MonoBehaviour
             //print("damage");
         }
 
+        if (other.gameObject.CompareTag("enemy_blast"))
+        {
+            health -= 40f;
+            hitstaken = 0;
+            animator.SetFloat("Damage", 80);
+            StartCoroutine(collidertoggle(0));
+            StartCoroutine(collidertoggle(4));
+            //print("damage");
+        }
+
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("enemy_punch"))
+        if (other.gameObject.CompareTag("enemy_punch") || other.gameObject.CompareTag("enemy_blast"))
         {
             animator.SetFloat("Damage", 0);
         }

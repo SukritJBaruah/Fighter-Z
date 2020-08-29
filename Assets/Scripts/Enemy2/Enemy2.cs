@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class Enemy2 : MonoBehaviour
@@ -49,6 +50,9 @@ public class Enemy2 : MonoBehaviour
 
     #endregion
 
+    [SerializeField]
+    public GameObject blastPrefab;
+
     //attack punch
     public BoxCollider2D enemy_punch;
 
@@ -66,7 +70,7 @@ public class Enemy2 : MonoBehaviour
     //animation
     protected Animator animator;
     //sprite mirrorer
-    private bool facingright;
+    public bool facingright;
     private bool playerup;
 
     private IEnemy2States currentstate;
@@ -155,10 +159,15 @@ public class Enemy2 : MonoBehaviour
     /// </summary>
     void Update()
     {
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Enemy2_blast"))
+        {
+            animator.SetBool("isblastanim", false);
+        }
+
         //energy regen
         if (energy < 500)
         {
-            energy += 0.05f;
+            energy += 0.02f;
         }
 
         if (health > 0)
@@ -282,6 +291,46 @@ public class Enemy2 : MonoBehaviour
     }
 
     #endregion
+
+
+    public async void blast(int value)
+    {
+        int x = value;
+        energy -= 70;
+
+        if(energy>=70)
+        {
+            while (x > 0)
+            {
+                Vector3 blastSpawn = transform.position;
+                System.Random rnd = new System.Random();
+
+                if (facingright)
+                {
+
+                    blastSpawn.x += 0.15f;
+                    blastSpawn.y -= 0.06f;
+                    blastSpawn.y += ((float)(rnd.Next(0, 11) - rnd.Next(0, 11)) / 100);
+                    GameObject tmp = (GameObject)Instantiate(blastPrefab, blastSpawn, Quaternion.identity);
+                    tmp.GetComponent<enemy_blast>().Initialize(Vector2.right);
+                }
+                else
+                {
+                    blastSpawn.x -= 0.15f;
+                    blastSpawn.y -= 0.06f;
+                    blastSpawn.y += ((float)(rnd.Next(0, 11) - rnd.Next(0, 11)) / 100);
+                    GameObject tmp = (GameObject)Instantiate(blastPrefab, blastSpawn, Quaternion.Euler(new Vector3(0, 0, -180)));
+                    tmp.GetComponent<enemy_blast>().Initialize(Vector2.left);
+                }
+
+                x -= 1;
+                await Task.Delay(291);
+            }
+
+        }
+    }
+
+
 
 
     #region Functions (screenclamp and mirror)

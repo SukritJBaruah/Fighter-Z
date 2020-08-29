@@ -36,6 +36,7 @@ public class IIdeal2State : IEnemy2States
         //goes to walking after ideal duration
         enemy.Animator.SetFloat("Velocity", 0);
 
+
         idealTimer += Time.deltaTime;
 
         if(idealTimer > difficultyUtils.idealDuration)

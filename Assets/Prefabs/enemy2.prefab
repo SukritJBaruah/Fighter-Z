@@ -29,7 +29,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1643398188521087279}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.12, y: -0.49, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -150,7 +150,10 @@ MonoBehaviour:
   inputJump: 0
   grounded: 1
   isjumping: 0
+  blastPrefab: {fileID: 8610095014137787415, guid: 92afc87c298da424c8df1ddc3a9741ac,
+    type: 3}
   enemy_punch: {fileID: 1643398189785357882}
+  facingright: 0
 --- !u!95 &1643398188521087317
 Animator:
   serializedVersion: 3

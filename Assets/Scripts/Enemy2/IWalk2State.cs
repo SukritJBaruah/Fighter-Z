@@ -7,12 +7,15 @@ public class IWalk2State : IEnemy2States
     DifficultyUtils difficultyUtils = GameObject.FindGameObjectWithTag("DifficultyUtils").GetComponent<DifficultyUtils>();
     private Enemy2 enemy;
     private float walkTimer;
+    private float blastTimer;
+    protected Animator animator;
 
     private float locatorTimer;
 
     public void Enter(Enemy2 enemy1)
     {
         this.enemy = enemy1;
+        animator = enemy.GetComponent<Animator>();
     }
 
     public void Execute()
@@ -25,7 +28,10 @@ public class IWalk2State : IEnemy2States
             enemy.LocatePlayer();
             locatorTimer = 0;
         }
-        enemy.Move();
+        if(!animator.GetCurrentAnimatorStateInfo(0).IsName("Enemy2_blast"))
+        {
+            enemy.Move();
+        }
     }
 
     public void Exit()
@@ -42,6 +48,12 @@ public class IWalk2State : IEnemy2States
     {
         //goes to ideal after walk duration
         walkTimer += Time.deltaTime;
+        blastTimer += Time.deltaTime;
+
+        if (blastTimer > difficultyUtils.blastCooldown)
+        {
+            enemy.ChangeState(new IBlast2State());
+        }
 
         if (walkTimer > difficultyUtils.walkDuration)
         {

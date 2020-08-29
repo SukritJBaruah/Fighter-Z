@@ -25,6 +25,9 @@ public class DifficultyUtils : MonoBehaviour
     //attack
     public float attaccCooldown = 0.5f;
 
+    //blast
+    public float blastCooldown = 3f;
+
     #endregion
 
 
