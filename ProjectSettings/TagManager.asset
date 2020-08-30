@@ -12,6 +12,7 @@ TagManager:
   - Player_blast
   - Player_big_blast
   - enemy_blast
+  - enemy_big_blast
   layers:
   - Default
   - TransparentFX

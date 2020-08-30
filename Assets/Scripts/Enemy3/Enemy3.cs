@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class Enemy2 : MonoBehaviour
+public class Enemy3 : MonoBehaviour
 {
     #region initial values
     // saved for efficiency
@@ -39,7 +39,7 @@ public class Enemy2 : MonoBehaviour
 
 
     // movement support
-    public const float MoveUnitsPerSecond = 0.8f;
+    public const float MoveUnitsPerSecond = 0.9f;
     const float verticalmultiplier = 0.6f;
     //run variables
     const float RunUnitsPerSecond = 2f;
@@ -73,7 +73,7 @@ public class Enemy2 : MonoBehaviour
     public bool facingright;
     private bool playerup;
 
-    private IEnemy2States currentstate;
+    private IEnemy3States currentstate;
     /// <summary>
     /// Use this for initialization
     /// </summary>
@@ -93,7 +93,7 @@ public class Enemy2 : MonoBehaviour
         enemy_punch.enabled = false;
 
 
-        ChangeState(new IIdeal2State());
+        ChangeState(new IIdeal3State());
 
     }
 
@@ -167,7 +167,7 @@ public class Enemy2 : MonoBehaviour
         //energy regen
         if (energy < 500)
         {
-            energy += 0.02f;
+            energy += 0.05f;
         }
 
         if (health > 0)
@@ -293,52 +293,45 @@ public class Enemy2 : MonoBehaviour
     #endregion
 
 
-    public async void blast(int value)
+    public async void blast()
     {
-        int x = value;
 
-        if(energy>=70)
+        await Task.Delay(870);
+        if (energy>=200)
         {
-            energy -= 70;
-            while (x > 0)
-            {
-                Vector3 blastSpawn = transform.position;
-                System.Random rnd = new System.Random();
+            energy -= 200;
+            Vector3 blastSpawn = transform.position;
 
                 if (facingright)
                 {
 
-                    blastSpawn.x += 0.15f;
+                    blastSpawn.x += 0.35f;
                     blastSpawn.y -= 0.06f;
-                    blastSpawn.y += ((float)(rnd.Next(0, 11) - rnd.Next(0, 11)) / 100);
                     GameObject tmp = (GameObject)Instantiate(blastPrefab, blastSpawn, Quaternion.identity);
-                    tmp.GetComponent<enemy_blast>().Initialize(Vector2.right);
+                    tmp.GetComponent<enemy_big_blast>().Initialize(Vector2.right);
                 }
                 else
                 {
-                    blastSpawn.x -= 0.15f;
+                    blastSpawn.x -= 0.35f;
                     blastSpawn.y -= 0.06f;
-                    blastSpawn.y += ((float)(rnd.Next(0, 11) - rnd.Next(0, 11)) / 100);
                     GameObject tmp = (GameObject)Instantiate(blastPrefab, blastSpawn, Quaternion.Euler(new Vector3(0, 0, -180)));
-                    tmp.GetComponent<enemy_blast>().Initialize(Vector2.left);
+                    tmp.GetComponent<enemy_big_blast>().Initialize(Vector2.left);
                 }
-
-                x -= 1;
-                await Task.Delay(291);
-            }
 
         }
     }
 
     public bool ifELeft()
     {
-        if (energy >= 70)
+        if (energy >= 200)
         {
             return true;
         }
         else
             return false;
     }
+
+
 
 
     #region Functions (screenclamp and mirror)
@@ -380,7 +373,7 @@ public class Enemy2 : MonoBehaviour
     #endregion
 
 
-    public void ChangeState(IEnemy2States newstate)
+    public void ChangeState(IEnemy3States newstate)
     {
         if(currentstate !=null)
         {

@@ -35,10 +35,17 @@ public class enemy_blast : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Player_blast"))
         {
+            myrigidbody.velocity = direction * 0;
             animator.SetBool("ToDestroy", true);
             StartCoroutine(Death(0.267f));
+        }
+
+        if (other.gameObject.CompareTag("Player_big_blast"))
+        {
+            myrigidbody.velocity = direction * 0;
+            StartCoroutine(Death(0));
         }
     }
 

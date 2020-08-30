@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class player_blast : MonoBehaviour
+public class enemy_big_blast : MonoBehaviour
 {
     [SerializeField]
     private float speed;
@@ -30,22 +30,16 @@ public class player_blast : MonoBehaviour
     {
         myrigidbody.velocity = direction * speed;
 
-        
+
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Enemy") || other.gameObject.CompareTag("enemy_blast"))
+        if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Player_big_blast"))
         {
             myrigidbody.velocity = direction * 0;
             animator.SetBool("ToDestroy", true);
             StartCoroutine(Death(0.266f));
-        }
-
-        if (other.gameObject.CompareTag("enemy_big_blast"))
-        {
-            myrigidbody.velocity = direction * 0;
-            StartCoroutine(Death(0));
         }
     }
 
