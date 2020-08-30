@@ -7,6 +7,9 @@ public class enemy_big_blast : MonoBehaviour
     [SerializeField]
     private float speed;
 
+    [SerializeField]
+    public GameObject expPrefab;
+
     private Rigidbody2D myrigidbody;
     Animator animator;
 
@@ -35,10 +38,14 @@ public class enemy_big_blast : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        Vector3 expSpawn = transform.position;
+
         if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Player_big_blast"))
         {
             myrigidbody.velocity = direction * 0;
             animator.SetBool("ToDestroy", true);
+            expSpawn.y += 0.55f;
+            GameObject tmp = (GameObject)Instantiate(expPrefab, expSpawn, Quaternion.identity);
             StartCoroutine(Death(0.266f));
         }
     }
