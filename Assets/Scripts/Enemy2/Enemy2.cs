@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
 
 public class Enemy2 : MonoBehaviour
@@ -293,7 +291,7 @@ public class Enemy2 : MonoBehaviour
     #endregion
 
 
-    public async void blast(int value)
+    public IEnumerator blast(int value)
     {
         int x = value;
 
@@ -324,7 +322,7 @@ public class Enemy2 : MonoBehaviour
                 }
 
                 x -= 1;
-                await Task.Delay(291);
+                yield return new WaitForSecondsRealtime(0.291f);
             }
 
         }

@@ -2,8 +2,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using Unity.Collections;
 using UnityEngine;
 
@@ -350,7 +348,7 @@ public class Sukrit : MonoBehaviour
                         {
                             animator.SetBool("isblastanim", true);
                             energy -= 90;
-                            blast(4);
+                            StartCoroutine(blast(4));
                             animator.SetFloat("Velocity", 0);
                             isDefending = false;
                         }
@@ -360,7 +358,7 @@ public class Sukrit : MonoBehaviour
                         {
                             animator.SetBool("bigblastanim", true);
                             energy -= 200;
-                            big_blast();
+                            StartCoroutine(big_blast());
                             animator.SetFloat("Velocity", 0);
                             isDefending = false;
                         }
@@ -600,7 +598,7 @@ public class Sukrit : MonoBehaviour
 
 
     #region special moves
-    public async void blast(int value)
+    public IEnumerator blast(int value)
     {
         int x = value;
 
@@ -628,14 +626,14 @@ public class Sukrit : MonoBehaviour
             }
 
             x -= 1;
-            await Task.Delay(282);
-            
+            yield return new WaitForSecondsRealtime(0.282f);
+
         }
     }
 
-    public async void big_blast()
+    public IEnumerator big_blast()
     {
-        await Task.Delay(999);
+        yield return new WaitForSecondsRealtime(0.999f);
         Vector3 blastSpawn = transform.position;
         System.Random rnd = new System.Random();
 

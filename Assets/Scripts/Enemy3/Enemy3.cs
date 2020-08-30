@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
 
 public class Enemy3 : MonoBehaviour
@@ -293,10 +291,9 @@ public class Enemy3 : MonoBehaviour
     #endregion
 
 
-    public async void blast()
+    public IEnumerator blast()
     {
-
-        await Task.Delay(870);
+        yield return new WaitForSecondsRealtime(0.870f);
         if (energy>=200)
         {
             energy -= 200;

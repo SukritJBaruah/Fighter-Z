@@ -2,8 +2,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using Unity.Collections;
 using UnityEngine;
 
@@ -33,7 +31,7 @@ public class IBlast2State : IEnemy2States
             {
                 animator.SetFloat("Velocity", 0);
                 animator.SetBool("isblastanim", true);
-                enemy.blast(3);
+                enemy.StartCoroutine(enemy.blast(3));
             }
         }
         enemy.ChangeState(new IIdeal2State());
