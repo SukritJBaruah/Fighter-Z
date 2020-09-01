@@ -35,6 +35,8 @@ public class stages : MonoBehaviour
         location.x = ScreenUtils.ScreenRight - 0.20f;
         location.z = -Camera.main.transform.position.z;
 
+
+        this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
     }
 
     // Update is called once per frame
@@ -42,7 +44,7 @@ public class stages : MonoBehaviour
     {
         if(endstage() == true || stageCount>7)
         {
-
+            StartCoroutine(endthis());
         }
 
 
@@ -115,7 +117,10 @@ public class stages : MonoBehaviour
 
     private IEnumerator endthis()
     {
+        Time.timeScale = 0;
+        this.gameObject.GetComponent<SpriteRenderer>().enabled = true;
         yield return new WaitForSecondsRealtime(2.5f);
+        Time.timeScale = 1;
         Destroy(GameObject.FindGameObjectWithTag("DifficultyUtils"));
         MenuManager.GoToMenu(MenuName.Main);
     }

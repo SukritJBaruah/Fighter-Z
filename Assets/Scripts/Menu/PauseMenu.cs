@@ -38,6 +38,7 @@ public class PauseMenu : MonoBehaviour
 		// unpause game, destroy menu, and go to main menu
 		Time.timeScale = 1;
 		Destroy(gameObject);
+		Destroy(GameObject.FindGameObjectWithTag("DifficultyUtils"));
 		MenuManager.GoToMenu(MenuName.Main);
 	}
 }

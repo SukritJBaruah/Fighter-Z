@@ -18,6 +18,7 @@ public class IIdeal2State : IEnemy2States
     public void Execute()
     {
         Ideal();
+        enemy.Animator.SetBool("Attack1", false);
 
     }
 

@@ -183,7 +183,7 @@ public class Sukrit : MonoBehaviour
         //health regen
         if(health < 250)
         {
-            health += 0.08f;
+            health += 0.01f;
         }
 
 

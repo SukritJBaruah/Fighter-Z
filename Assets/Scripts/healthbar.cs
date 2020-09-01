@@ -18,6 +18,7 @@ public class healthbar : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
         Vector2 loc = player.transform.position;
         loc.x -= 0.25f;
         loc.y += 0.5f;
@@ -28,7 +29,6 @@ public class healthbar : MonoBehaviour
             localscale.x = 0;
         }
         transform.localScale = localscale;
-
 
     }
 }
