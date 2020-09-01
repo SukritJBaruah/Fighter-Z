@@ -11,12 +11,8 @@ public class healthbar : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        localscale = transform.localScale;
-    }
-
-    private void Awake()
-    {
         player = GameObject.FindGameObjectWithTag("Player");
+        localscale = transform.localScale;
     }
 
     // Update is called once per frame

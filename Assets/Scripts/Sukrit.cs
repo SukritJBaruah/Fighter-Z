@@ -105,6 +105,7 @@ public class Sukrit : MonoBehaviour
     {
         if (other.gameObject.CompareTag("enemy_punch") && hitstaken != 2 && !isDefending)
         {
+            punch.enabled = false;
             health -= 30f;
             hitstaken += 1;
             animator.SetFloat("Damage", 30);
@@ -112,6 +113,7 @@ public class Sukrit : MonoBehaviour
         }
         else if (other.gameObject.CompareTag("enemy_punch") && hitstaken == 2)
         {
+            punch.enabled = false;
             health -= 30f;
             hitstaken = 0;
             animator.SetFloat("Damage", 90);
@@ -121,6 +123,7 @@ public class Sukrit : MonoBehaviour
         }
         if (other.gameObject.CompareTag("enemy_punch") && isDefending)
         {
+            punch.enabled = false;
             health -= 2f;
             animator.SetFloat("Damage", 2);
             //print("damage");
@@ -128,6 +131,7 @@ public class Sukrit : MonoBehaviour
 
         if (other.gameObject.CompareTag("enemy_blast"))
         {
+            punch.enabled = false;
             health -= 40f;
             hitstaken = 0;
             animator.SetFloat("Damage", 80);
@@ -138,6 +142,7 @@ public class Sukrit : MonoBehaviour
 
         if (other.gameObject.CompareTag("enemy_big_blast"))
         {
+            punch.enabled = false;
             health -= 150f;
             hitstaken = 0;
             animator.SetFloat("Damage", 150);

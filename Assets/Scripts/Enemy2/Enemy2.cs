@@ -99,6 +99,7 @@ public class Enemy2 : MonoBehaviour
     {
         if(other.gameObject.CompareTag("player_punch") && hitstaken!=2)
         {
+            enemy_punch.enabled = false;
             health -= 30f;
             hitstaken += 1;
             animator.SetFloat("Damage", 30);
@@ -106,6 +107,7 @@ public class Enemy2 : MonoBehaviour
         }
         else if(other.gameObject.CompareTag("player_punch") && hitstaken == 2)
         {
+            enemy_punch.enabled = false;
             health -= 30f;
             hitstaken = 0;
             animator.SetFloat("Damage", 90);
@@ -116,6 +118,7 @@ public class Enemy2 : MonoBehaviour
 
         if(other.gameObject.CompareTag("player_kick"))
         {
+            enemy_punch.enabled = false;
             health -= 80f;
             hitstaken = 0;
             animator.SetFloat("Damage", 80);
@@ -125,6 +128,7 @@ public class Enemy2 : MonoBehaviour
 
         if (other.gameObject.CompareTag("Player_blast"))
         {
+            enemy_punch.enabled = false;
             health -= 40f;
             hitstaken = 0;
             animator.SetFloat("Damage", 80);
@@ -135,6 +139,7 @@ public class Enemy2 : MonoBehaviour
 
         if (other.gameObject.CompareTag("Player_big_blast"))
         {
+            enemy_punch.enabled = false;
             health -= 180f;
             hitstaken = 0;
             animator.SetFloat("Damage", 180);
