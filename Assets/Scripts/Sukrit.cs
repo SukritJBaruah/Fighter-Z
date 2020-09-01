@@ -633,6 +633,7 @@ public class Sukrit : MonoBehaviour
 
     public IEnumerator big_blast()
     {
+        AudioManager.Play(AudioClipName.finalflash_charge);
         yield return new WaitForSecondsRealtime(0.999f);
         Vector3 blastSpawn = transform.position;
         System.Random rnd = new System.Random();

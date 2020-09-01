@@ -15,6 +15,7 @@ public class player_blast : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        AudioManager.Play(AudioClipName.kiblast);
         myrigidbody = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
 
@@ -39,12 +40,14 @@ public class player_blast : MonoBehaviour
         {
             myrigidbody.velocity = direction * 0;
             animator.SetBool("ToDestroy", true);
+            AudioManager.Play(AudioClipName.kiplosion);
             StartCoroutine(Death(0.266f));
         }
 
         if (other.gameObject.CompareTag("enemy_big_blast"))
         {
             myrigidbody.velocity = direction * 0;
+            AudioManager.Play(AudioClipName.kiplosion);
             StartCoroutine(Death(0));
         }
     }

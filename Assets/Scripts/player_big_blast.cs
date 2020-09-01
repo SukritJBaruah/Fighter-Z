@@ -9,6 +9,7 @@ public class player_big_blast : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        AudioManager.Play(AudioClipName.finalflash);
         StartCoroutine(Death(0.476f));
     }
 

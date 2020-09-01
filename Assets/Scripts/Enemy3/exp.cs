@@ -7,6 +7,7 @@ public class exp : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        AudioManager.Play(AudioClipName.explosion);
         StartCoroutine(Death(1.0f));
     }
 
