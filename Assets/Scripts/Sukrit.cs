@@ -349,20 +349,22 @@ public class Sukrit : MonoBehaviour
 
 
                         // special move blast
-                        if (energy>=90 && Input.GetAxis("Horizontal") != 0 && Input.GetButtonDown("Attack") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_blast"))
+                        if (energy>=90 && Input.GetAxis("Horizontal") != 0 && Input.GetButtonDown("Attack") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_blast") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_big_plast"))
                         {
                             animator.SetBool("isblastanim", true);
                             energy -= 90;
+                            punch.enabled = false;
                             StartCoroutine(blast(4));
                             animator.SetFloat("Velocity", 0);
                             isDefending = false;
                         }
 
                         // big blast
-                        if (energy >= 250 && Input.GetAxis("Horizontal") != 0 && Input.GetButtonDown("Jump") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_big_plast"))
+                        if (energy >= 250 && Input.GetAxis("Horizontal") != 0 && Input.GetButtonDown("Jump") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_big_plast") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_blast"))
                         {
                             animator.SetBool("bigblastanim", true);
                             energy -= 200;
+                            punch.enabled = false;
                             StartCoroutine(big_blast());
                             animator.SetFloat("Velocity", 0);
                             isDefending = false;
