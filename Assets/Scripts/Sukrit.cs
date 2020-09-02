@@ -386,7 +386,7 @@ public class Sukrit : MonoBehaviour
 
             #region attack
             attackanim:
-                if (Input.GetButtonDown("Attack") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_RunAttack") && !isDefending)
+                if (Input.GetButtonDown("Attack") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Player_RunAttack") && !isDefending && !isjumping)
                 {
                     #region Run_attack
                     //Run attack
